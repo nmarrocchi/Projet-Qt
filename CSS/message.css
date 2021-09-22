@@ -1,22 +1,31 @@
 .messagesContainer{
-    border: solid black 1px;
     margin: 5vh auto;
     width: 40%;
 }
 
 .chat{
-    border: solid black 2px;
-    margin: 1vh auto;
+    background-color: black;
+    border-top: solid white 1px;
+    border-left: solid white 1px;
+    border-radius: 10px 0px 0px 0px;
+    margin: 1vh auto 0vh auto;
     padding: 1vh 0.5vw;
-    width: 70%;
+    width: 90%;
+    height: 30vh;
+    overflow-y: scroll;
 }
 
 textarea {
+    background-color: black;
+    color: white;
     display: block;
     resize: none;
-    width: 70%;
-    margin: 2vh auto;
+    width: 90%;
+    margin: 0vh auto 2vh auto;
     padding: 1vh 0.5vw;
+    border-bottom: solid white 1px;
+    border-left: solid white 1px;
+    border-right: solid white 1px;
 }
 
 input[type="button"]{
