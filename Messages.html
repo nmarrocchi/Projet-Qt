@@ -1,45 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="CSS/message.css">
-    <script src="testjs.js" async defer></script>
-    <title>Accueil</title>
-</head>
-<body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WebSocket Chat Client</title>
+    </head>
+    <body>
+        <h1>WebSocket Client</h1>
+        <p>
+            IP: <input id="webSocketHost" type="text" value="192.168.64.245:500"/>
+        </p>
+        <p>
+            <button onClick="initWebSocket();">Connexion</button>
+            <button id="disconnectButton" onClick="stopWebSocket();" disabled>Déconnexion</button>
+        </p>
+        <p>
+            <textarea id="debugTextArea" style="width:400px;height:200px;" readonly></textarea>
+        </p>
+        <p>
+            <input type="text" id="inputNick" value="Pseudo" />
+            <input type="text" id="inputText" onkeydown="if(event.keyCode==13)sendMessage();"/>
+            <button id="sendButton" onClick="sendMessage();" disabled>Envoyer</button>
+        </p>
 
-    <div class="container">
+        <script type="text/javascript">
+            var debugTextArea = document.getElementById("debugTextArea");
+            function debug(message) {
+                debugTextArea.value += message + "\n";
+                debugTextArea.scrollTop = debugTextArea.scrollHeight;
+            }
 
-        <div class="messagesContainer">
-            <div class="chat">
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-                <p>server : coucou</p>
-                <p>server : test</p>
-            </div>
-    
-            <textarea id="message" name="message" rows="5" cols="33"></textarea>
-            <input type="button" name="send_Message" id="send_message" value="Send">
-        </div>
+            function sendMessage() {
+                var nickname = document.getElementById("inputNick").value;
+                var msg = document.getElementById("inputText").value;
+                var strToSend = nickname + ": " + msg;
+                if ( websocket != null )
+                {
+                    document.getElementById("inputText").value = "";
+                    websocket.send( strToSend );
+                    console.log( "string sent :", '"'+strToSend+'"' );
+                    debug(strToSend);
+                }
+            }
 
-    </div>
+            var websocket = null;
 
-</body>
+            function initWebSocket() {
+                try {
+                    if (typeof MozWebSocket == 'function')
+                        WebSocket = MozWebSocket;
+                    if ( websocket && websocket.readyState == 1 )
+                        websocket.close();
+                    var wsUri = "ws://" + document.getElementById("webSocketHost").value;
+                    websocket = new WebSocket( wsUri );
+                    websocket.onopen = function (evt) {
+                        debug("CONNECTED");
+                        document.getElementById("disconnectButton").disabled = false;
+                        document.getElementById("sendButton").disabled = false;
+                    };
+                    websocket.onclose = function (evt) {
+                        debug("DISCONNECTED");
+                        document.getElementById("disconnectButton").disabled = true;
+                        document.getElementById("sendButton").disabled = true;
+                    };
+                    websocket.onmessage = function (evt) {
+                        console.log( "Message received :", evt.data );
+                        debug( evt.data );
+                    };
+                    websocket.onerror = function (evt) {
+                        debug('ERROR: ' + evt.data);
+                    };
+                } catch (exception) {
+                    debug('ERROR: ' + exception);
+                }
+            }
+
+            function stopWebSocket() {
+                if (websocket)
+                    websocket.close();
+            }
+        </script>
+    </body>
 </html>
