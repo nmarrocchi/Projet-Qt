@@ -32,6 +32,7 @@ form{
     box-shadow: rgb(161, 161, 161) 5px 5px;
     color: white;
 }
+
 form label{
     margin: 2vh auto 0vh auto;
     display: block;
@@ -46,8 +47,34 @@ form input{
     text-align: center;
 }
 
+form input[type="text"]{
+    min-width: 60%;
+    max-width: -webkit-fill-available;
+}
+
 form input[type="submit"]{
     border-radius: 10px;
     padding: 1vh 2vw;
     background-color: rgb(255, 255, 255);
+    display: inline-block;
+    margin: 1vh 2vw;
+}
+
+.form_btn{
+    margin: 1vh auto;
+    text-align: center;
+}
+
+@media screen and ( max-width: 1024px) {
+    form{
+        width: 90%;
+    }
+
+    form input[type="text"]{
+        max-width: 80%;
+    }
+
+    form input[type="submit"]{
+        padding: 1.2vh 3vw;
+    }
 }
